@@ -47,29 +47,31 @@ end
 # claculate how long the user can spend on each pose
 def calculate_rounds(total_time, total_moves)
   total_rounds = 0
+  remaining_time = total_time
   # try to get in as many rounds as possible given their time frame
-  while total_time > total_moves * total_rounds * 2
+  while remaining_time > total_moves * total_rounds * 2
     total_rounds += 1
-    total_time -= total_moves * total_rounds * 2
+    remaining_time -= total_moves * total_rounds * 2
     puts "total_rounds = #{total_rounds}"
     puts "total_moves = #{total_moves}"
-    puts "total_time = #{total_time}"
+    puts "remaining_time = #{remaining_time}"
   end
-  total_rounds
+  return remaining_time, total_rounds
 end
 
-def calculate_move_time(total_time, total_moves, total_rounds)
+def calculate_move_time(remaining_time, total_moves, total_rounds)
   # Any "left over" time not applied to full rounds can be added to individual poses
-  additional_time = total_time / (total_rounds.factorial * total_moves.to_f)
+  additional_time = remaining_time / (total_rounds.factorial * total_moves.to_f)
   puts "additional_time = #{additional_time}"
   # calculate the base time for each pose
-  2 + additional_time
+  move_time = 2 + additional_time
+  move_time
 end
 
 def calculate(total_time)
   total_moves = calculate_moves
-  total_rounds = calculate_rounds(total_time, total_moves)
-  move_time = calculate_move_time(total_time, total_moves, total_rounds)
+  remaining_time, total_rounds = calculate_rounds(total_time, total_moves)
+  move_time = calculate_move_time(remaining_time, total_moves, total_rounds)
   return total_rounds, move_time
 end
 
