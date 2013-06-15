@@ -2,22 +2,13 @@ module Calculators
   require_relative 'sequence'
 
   # Run ALL the calculations
-  def Calculators.calculate(sequence, total_time)
-    total_moves = calculate_moves(sequence)
+  def Calculators.calculate(total_time, total_moves)
     remaining_time, total_rounds = calculate_rounds(total_time, total_moves)
     move_time = calculate_move_time(remaining_time, total_moves, total_rounds)
     return total_rounds, move_time
   end
 
   private
-
-  # calculate how many moves the sequence goes through in total
-  # (including right/left iterations)
-  def Calculators.calculate_moves(sequence)
-    total_moves = 0
-    Sequence.run_sequence(sequence, nil, ->(move, side) { total_moves = total_moves + 1 } )
-    total_moves
-  end
 
   # calculate how many rounds the user can given their time frame
   def Calculators.calculate_rounds(total_time, total_moves)
