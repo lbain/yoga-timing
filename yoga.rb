@@ -38,8 +38,15 @@ def run_sequence
   end
 end
 
+def calculate_moves
+  total_moves = 0
+  run_sequence { |move| total_moves = total_moves + 1 }
+  total_moves
+end
+
 # claculate how long the user can spend on each pose
-def calculate_times(total_time, total_moves, total_rounds)
+def calculate_rounds(total_time, total_moves)
+  total_rounds = 0
   # try to get in as many rounds as possible given their time frame
   while total_time > total_moves * total_rounds * 2
     total_rounds += 1
@@ -48,29 +55,37 @@ def calculate_times(total_time, total_moves, total_rounds)
     puts "total_moves = #{total_moves}"
     puts "total_time = #{total_time}"
   end
+  total_rounds
+end
+
+def calculate_move_time(total_time, total_moves, total_rounds)
   # Any "left over" time not applied to full rounds can be added to individual poses
   additional_time = total_time / (total_rounds.factorial * total_moves.to_f)
   puts "additional_time = #{additional_time}"
   # calculate the base time for each pose
-  move_time = 2 + additional_time
-  return total_time, total_moves, total_rounds, move_time
+  2 + additional_time
+end
+
+def calculate(total_time)
+  total_moves = calculate_moves
+  total_rounds = calculate_rounds(total_time, total_moves)
+  move_time = calculate_move_time(total_time, total_moves, total_rounds)
+  return total_rounds, move_time
+end
+
+def run_practice(total_rounds, move_time)
+  (1..total_rounds).each do |round|
+    round_side = round.even? ? SIDES.reverse : SIDES
+    delay = (total_rounds - round + 1) * (move_time)
+    run_sequence { |move, side| give_move(move, side, delay) }
+  end
 end
 
 # basically the main() function
 
 total_time = ARGV[0] || 10
 total_time = total_time.to_i * 60
-total_rounds = 0
 
-total_moves = 0
-run_sequence { |move| total_moves = total_moves + 1 }
-puts total_moves
+total_rounds, move_time = calculate(total_time)
 
-total_time, total_moves, total_rounds, move_time =
-  calculate_times(total_time, total_moves, total_rounds)
-
-(1..total_rounds).each do |round|
-  round_side = round.even? ? SIDES.reverse : SIDES
-  delay = (total_rounds - round + 1) * (move_time)
-  run_sequence { |move, side| give_move(move, side, delay) }
-end
+run_practice(total_rounds, move_time)
