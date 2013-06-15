@@ -12,6 +12,7 @@ SIDES = ['left', 'right'] unless defined?(SIDES)
 # what the program will evaluate
 @sequence = eval(@sequence)
 
+# what the user actually sees/here for each move
 def give_move(move, side, delay)
   start = Time.now
   # system("say #{move} #{side}") #this is super slick on macs
@@ -22,6 +23,8 @@ def give_move(move, side, delay)
   # sleep(delay)
 end
 
+# run through the whole sequence (including right/left iterations)
+# with a given block
 def run_sequence
   @sequence.each do |move|
     if move.is_a? Hash
@@ -38,13 +41,15 @@ def run_sequence
   end
 end
 
+# calculate how many moves the sequence goes through in total
+# (including right/left iterations)
 def calculate_moves
   total_moves = 0
   run_sequence { |move| total_moves = total_moves + 1 }
   total_moves
 end
 
-# claculate how long the user can spend on each pose
+# calculate how many rounds the user can given their time frame
 def calculate_rounds(total_time, total_moves)
   total_rounds = 0
   remaining_time = total_time
@@ -59,6 +64,8 @@ def calculate_rounds(total_time, total_moves)
   return remaining_time, total_rounds
 end
 
+# based on how much time is remaining, calculate how long
+# each pose should be held for in total
 def calculate_move_time(remaining_time, total_moves, total_rounds)
   # Any "left over" time not applied to full rounds can be added to individual poses
   additional_time = remaining_time / (total_rounds.factorial * total_moves.to_f)
@@ -68,6 +75,7 @@ def calculate_move_time(remaining_time, total_moves, total_rounds)
   move_time
 end
 
+# Run ALL the calculations
 def calculate(total_time)
   total_moves = calculate_moves
   remaining_time, total_rounds = calculate_rounds(total_time, total_moves)
@@ -75,6 +83,7 @@ def calculate(total_time)
   return total_rounds, move_time
 end
 
+# ok, now all the relevant numbers have been crunched, run this thing!
 def run_practice(total_rounds, move_time)
   (1..total_rounds).each do |round|
     round_side = round.even? ? SIDES.reverse : SIDES
@@ -84,7 +93,6 @@ def run_practice(total_rounds, move_time)
 end
 
 # basically the main() function
-
 total_time = ARGV[0] || 10
 total_time = total_time.to_i * 60
 
