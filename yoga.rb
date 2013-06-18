@@ -18,7 +18,7 @@ total_time = $stdin.gets.chomp.to_i * 60
 puts "What sequence would you like to use?"
 file_options = []
 dir_contents = Dir.entries("./sequences").each do |f|
-  file_options << f unless f.include? "."
+  file_options << f.gsub('.rb', '') unless f.start_with? "."
 end
 file_options.each_with_index do |file, i|
   puts "#{i+1}. #{file}"
@@ -26,6 +26,7 @@ end
 file_number = $stdin.gets.chomp.to_i
 file = file_options[file_number - 1]
 
+#TODO: or max num of rounds
 puts "What's the shortest length of time you want to hold a pose (in seconds)?"
 min_move_time = $stdin.gets.chomp.to_i
 
@@ -33,5 +34,4 @@ puts "total_time = #{total_time}"
 puts "file = #{file}"
 puts "min_move_time = #{min_move_time}"
 
-
-Sequence.new('./sequences/' + file, total_time, min_move_time)
+Sequence.new('./sequences/' + file + '.rb', total_time, min_move_time)

@@ -18,7 +18,7 @@
     "Warrior 2",
     "Warrior 3",
     "Warrior 1",
-    "lunge"]
+    "low lunge"]
     },
   "down dog",
   "Plank",
