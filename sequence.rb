@@ -5,7 +5,7 @@ class Sequence
   attr_accessor :sequence
   @sequence
 
-  def initialize(sequence_file, total_time)
+  def initialize(sequence_file, total_time, min_move_time)
     # Get the base sequence from another file
     # (don't want things to get too messy in here!)
     sequence = File.read(sequence_file)
@@ -13,7 +13,7 @@ class Sequence
     # Note: eval is really dangerous, don't use it unless you have controll over
     # what the program will evaluate
     @sequence = eval(sequence)
-    run_practice(total_time)
+    run_practice(total_time, min_move_time)
   end
 
   # define constants
@@ -47,9 +47,9 @@ class Sequence
   end
 
   # ok, now all the relevant numbers have been crunched, run this thing!
-  def run_practice(total_time)
+  def run_practice(total_time, min_move_time)
     total_moves = count_moves()
-    total_rounds, move_time = Calculators.calculate(total_time, total_moves)
+    total_rounds, move_time = Calculators.calculate(total_time, total_moves, min_move_time)
     (1..total_rounds).each do |round|
       round_sides = round.even? ? SIDES.reverse : SIDES
       delay = (total_rounds - round + 1) * (move_time)

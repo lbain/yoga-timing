@@ -12,8 +12,26 @@ def give_move(move, side, delay)
 end
 
 # basically the main() function
-total_time = ARGV[0] || 10
-total_time = total_time.to_i * 60
+puts "How long would you like to practice for (in minutes)?"
+total_time = $stdin.gets.chomp.to_i * 60
 
-# TODO: add other sequences and ask user what they want to do
-Sequence.new('default_sequence.rb', total_time)
+puts "What sequence would you like to use?"
+file_options = []
+dir_contents = Dir.entries("./sequences").each do |f|
+  file_options << f unless f.include? "."
+end
+file_options.each_with_index do |file, i|
+  puts "#{i+1}. #{file}"
+end
+file_number = $stdin.gets.chomp.to_i
+file = file_options[file_number - 1]
+
+puts "What's the shortest length of time you want to hold a pose (in seconds)?"
+min_move_time = $stdin.gets.chomp.to_i
+
+puts "total_time = #{total_time}"
+puts "file = #{file}"
+puts "min_move_time = #{min_move_time}"
+
+
+Sequence.new('./sequences/' + file, total_time, min_move_time)
