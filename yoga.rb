@@ -3,12 +3,12 @@ require_relative 'sequence'
 # what the user actually sees/here for each move
 def give_move(move, side, delay)
   start = Time.now
-  # system("say #{move} #{side}") #this is super slick on macs
+  system("say #{move} #{side}") #this is super slick on macs
   elapsed = Time.now - start
   delay -= elapsed
   puts "#{move} #{side}"
   puts "  hold for #{delay} seconds"
-  # sleep(delay)
+  sleep(delay)
 end
 
 # basically the main() function
