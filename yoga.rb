@@ -30,25 +30,27 @@ def give_move(move, side, delay)
   delay -= elapsed
   puts "#{move} #{side}"
   puts "  hold for #{delay} seconds"
-  listen_for_pause(delay)
+  sleep(delay)
 end
 
 # basically the main() function
-puts "How long would you like to practice for (in minutes)?"
-total_time = $stdin.gets.chomp.to_i * 60
+if __FILE__ == $0
+  puts "How long would you like to practice for (in minutes)?"
+  total_time = $stdin.gets.chomp.to_i * 60
 
-puts "What sequence would you like to use?"
-file_options = []
-dir_contents = Dir.entries("./sequences").each do |f|
-  file_options << f.gsub('.rb', '') unless f.start_with? "."
+  puts "What sequence would you like to use?"
+  file_options = []
+  dir_contents = Dir.entries("./sequences").each do |f|
+    file_options << f.gsub('.rb', '') unless f.start_with? "."
+  end
+  file_options.each_with_index do |file, i|
+    puts "#{i+1}. #{file}"
+  end
+  file_number = $stdin.gets.chomp.to_i
+  file = file_options[file_number - 1]
+
+  puts "What's the shortest length of time you want to hold a pose (in seconds)?"
+  min_move_time = $stdin.gets.chomp.to_i
+
+  Sequence.new('./sequences/' + file + '.rb', total_time, min_move_time)
 end
-file_options.each_with_index do |file, i|
-  puts "#{i+1}. #{file}"
-end
-file_number = $stdin.gets.chomp.to_i
-file = file_options[file_number - 1]
-
-puts "What's the shortest length of time you want to hold a pose (in seconds)?"
-min_move_time = $stdin.gets.chomp.to_i
-
-Sequence.new('./sequences/' + file + '.rb', total_time, min_move_time)
