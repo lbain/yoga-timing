@@ -3,4 +3,8 @@ class Integer
   def factorial
     (1..self).reduce(:*)
   end
+
+  def triangle
+    (1..self).reduce(:+)
+  end
 end

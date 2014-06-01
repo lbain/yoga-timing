@@ -50,9 +50,11 @@ class Sequence
   def run_practice(total_time, min_move_time)
     total_moves = count_moves()
     total_rounds, move_time = Calculators.calculate(total_time, total_moves, min_move_time)
+    puts "total_rounds = #{total_rounds}"
     (1..total_rounds).each do |round|
       round_sides = round.even? ? SIDES.reverse : SIDES
-      delay = (total_rounds - round + 1) * (move_time)
+      delay = (total_rounds - round) + move_time
+      puts "delay = #{delay}"
       run_sequence(round_sides, ->(move, side) { give_move(move, side, delay) } )
     end
   end

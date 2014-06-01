@@ -17,18 +17,22 @@ module Calculators
     # try to get in as many rounds as possible given their time frame
     begin
       total_rounds += 1
-      remaining_time -= total_moves * min_move_time * total_rounds
-    end while remaining_time > total_moves * min_move_time * (total_rounds + 1)
+      remaining_time -= total_moves * (min_move_time + total_rounds - 1)
+    end while remaining_time > total_moves * (min_move_time + total_rounds)
     return remaining_time, total_rounds
   end
 
   # based on how much time is remaining, calculate how long
   # each pose should be held for in total
-  def Calculators.calculate_move_time(min_move_time, remaining_time, total_moves, total_rounds)
-    # Any "left over" time not applied to full rounds can be added to individual poses
-    additional_time = remaining_time / (total_rounds.factorial * total_moves.to_f)
+  def Calculators.calculate_move_time(min_move_time, remaining_time, num_moves, total_rounds)
     # calculate the base time for each pose
-    move_time = min_move_time + additional_time
-    move_time
+    total_moves = num_moves * total_rounds
+    min_move_time + additional_time(remaining_time, total_moves)
   end
+
+  # Any "left over" time not applied to full rounds can be added to individual poses
+  def Calculators.additional_time(remaining_time, total_moves)
+    remaining_time / (total_moves.to_f)
+  end
+
 end
