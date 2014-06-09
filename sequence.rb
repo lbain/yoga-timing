@@ -1,5 +1,5 @@
 class Sequence
-  require_relative 'calculators'
+  require_relative 'calculator'
   require_relative 'extras'
 
   attr_accessor :sequence
@@ -49,11 +49,14 @@ class Sequence
   # ok, now all the relevant numbers have been crunched, run this thing!
   def run_practice(total_time, min_move_time)
     total_moves = count_moves()
-    total_rounds, move_time = Calculators.calculate(total_time, total_moves, min_move_time)
-    puts "total_rounds = #{total_rounds}"
-    (1..total_rounds).each do |round|
+    puts "total_moves = #{total_moves}"
+    puts "total_time = #{total_time}"
+    calculator = Calculator.new(total_time, total_moves, min_move_time)
+    puts calculator.time_per_round
+    puts "total_rounds = #{calculator.num_rounds}"
+    (1..calculator.num_rounds).each do |round|
       round_sides = round.even? ? SIDES.reverse : SIDES
-      delay = (total_rounds - round) + move_time
+      delay = calculator.time_per_round[round]
       puts "delay = #{delay}"
       run_sequence(round_sides, ->(move, side) { give_move(move, side, delay) } )
     end
